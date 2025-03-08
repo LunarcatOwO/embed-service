@@ -3,7 +3,7 @@ const { getLatestVideo, getFeaturedVideo } = require('./youtube-api');
 
 function setupRoutes(app) {
     // API endpoint that returns JSON data for latest video
-    app.get('/app/latest-video', async (req, res) => {
+    app.get('/app/json/latest-video', async (req, res) => {
         try {
             const embedUrl = await getLatestVideo();
             res.json({ embedUrl: embedUrl });
@@ -14,7 +14,7 @@ function setupRoutes(app) {
     });
     
     // API endpoint for featured video (what appears on channel homepage)
-    app.get('/app/featured-video', async (req, res) => {
+    app.get('/app/json/featured-video', async (req, res) => {
         try {
             const embedUrl = await getFeaturedVideo();
             res.json({ embedUrl: embedUrl });
@@ -25,7 +25,7 @@ function setupRoutes(app) {
     });
     
     // Embed endpoint - returns HTML that can be embedded directly
-    app.get('/app/embed/latest-video', async (req, res) => {
+    app.get('/app/latest-video', async (req, res) => {
         try {
             // Get width and height from query parameters, or use defaults
             const width = req.query.width || '560';
@@ -62,7 +62,7 @@ function setupRoutes(app) {
     });
     
     // Embed endpoint for featured video
-    app.get('/app/embed/featured-video', async (req, res) => {
+    app.get('/app/featured-video', async (req, res) => {
         try {
             // Get width and height from query parameters, or use defaults
             const width = req.query.width || '560';
