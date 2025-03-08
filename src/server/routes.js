@@ -2,7 +2,7 @@ const express = require('express');
 const { getLatestVideo } = require('./youtube-api');
 
 function setupRoutes(app) {
-    app.get('/api/latest-video', async (req, res) => {
+    app.get('/app/latest-video', async (req, res) => {
         try {
             // Get width and height from query parameters, or use defaults
             const width = req.query.width || '560';
