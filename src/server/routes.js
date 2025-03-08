@@ -9,25 +9,42 @@ function setupRoutes(app) {
             const height = req.query.height || '315';
             
             const embedUrl = await getLatestVideo();
+            const embedCode = `<iframe 
+                width="${width}" 
+                height="${height}" 
+                src="${embedUrl}" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+            </iframe>`;
             
-            // Set content type to HTML
-            res.setHeader('Content-Type', 'text/html');
-            
-            // Send HTML document with embedded player
-            res.send(`<!DOCTYPE html>
-                <html>
-                <body style="margin:0;padding:0;">
-                    <iframe 
-                        width="${width}" 
-                        height="${height}" 
-                        src="${embedUrl}" 
-                        frameborder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                        allowfullscreen>
-                    </iframe>
-                </body>
-                </html>`);
+            res.json({
+                embedUrl: embedUrl,
+                embedCode: embedCode
+            });
                 
+        } catch (error) {
+            res.status(500).json({ error: 'Failed to fetch the latest video' });
+        }
+    });
+    
+    app.get('/app/latest-video/embed', async (req, res) => {
+        try {
+            const width = req.query.width || '560';
+            const height = req.query.height || '315';
+            
+            const embedUrl = await getLatestVideo();
+            
+            // Send HTML directly with proper content type
+            res.setHeader('Content-Type', 'text/html');
+            res.send(`<iframe 
+                width="${width}" 
+                height="${height}" 
+                src="${embedUrl}" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+            </iframe>`);
         } catch (error) {
             res.status(500).send('Failed to fetch the latest video');
         }
