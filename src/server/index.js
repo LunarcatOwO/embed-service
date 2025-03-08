@@ -8,7 +8,6 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware setup
 app.use(express.json());
-app.use(express.static(path.join(__dirname, '..', 'client')));
 
 // Set up routes
 setupRoutes(app);
