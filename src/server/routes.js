@@ -30,6 +30,8 @@ function setupRoutes(app) {
             // Get width and height from query parameters, or use defaults
             const width = req.query.width || '560';
             const height = req.query.height || '315';
+            // Get border radius from query parameter or use default
+            const borderRadius = req.query.borderRadius || '12px';
             
             const embedUrl = await getLatestVideo();
             
@@ -48,11 +50,14 @@ function setupRoutes(app) {
     <title>Latest Video</title>
     <style>
         body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; }
+        .video-container { width: 100%; height: 100%; overflow: hidden; border-radius: ${borderRadius}; }
         iframe { width: 100%; height: 100%; border: 0; }
     </style>
 </head>
 <body>
-    <iframe width="${width}" height="${height}" src="${embedUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    <div class="video-container">
+        <iframe width="${width}" height="${height}" src="${embedUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
 </body>
 </html>`);
         } catch (error) {
@@ -67,6 +72,8 @@ function setupRoutes(app) {
             // Get width and height from query parameters, or use defaults
             const width = req.query.width || '560';
             const height = req.query.height || '315';
+            // Get border radius from query parameter or use default
+            const borderRadius = req.query.borderRadius || '12px';
             
             const embedUrl = await getFeaturedVideo();
             
@@ -85,11 +92,14 @@ function setupRoutes(app) {
     <title>Featured Video</title>
     <style>
         body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; }
+        .video-container { width: 100%; height: 100%; overflow: hidden; border-radius: ${borderRadius}; }
         iframe { width: 100%; height: 100%; border: 0; }
     </style>
 </head>
 <body>
-    <iframe width="${width}" height="${height}" src="${embedUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    <div class="video-container">
+        <iframe width="${width}" height="${height}" src="${embedUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
 </body>
 </html>`);
         } catch (error) {
