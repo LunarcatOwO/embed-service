@@ -29,10 +29,7 @@ const getFeaturedVideo = async (channelId = CHANNEL_ID) => {
         const response = await axios.get(url);
         const channelData = response.data.items[0];
         
-        if (channelData && 
-            channelData.brandingSettings && 
-            channelData.brandingSettings.channel && 
-            channelData.brandingSettings.channel.unsubscribedTrailer) {
+        if (channelData?.brandingSettings?.channel?.unsubscribedTrailer) {
             
             const videoId = channelData.brandingSettings.channel.unsubscribedTrailer;
             return `https://www.youtube.com/embed/${videoId}`;
