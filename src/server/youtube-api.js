@@ -9,7 +9,7 @@ const cache = {
 };
 
 
-const CACHE_EXPIRATION = 1 * 60000;
+const CACHE_EXPIRATION = 5 * 60000;
 
 // Check if cache needs refreshing
 const isCacheExpired = (cacheEntry) => {
