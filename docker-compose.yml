@@ -1,8 +1,7 @@
 services:
   app:
-    build: .
-    image: youtube-embed-service
-    restart: unless-stopped
+    image: ghcr.io/LunarcatOwO/youtube-embed-service:latest
+    restart: always
     environment:
       - NODE_ENV=production
       - PORT=${PORT:-3000}
@@ -24,6 +23,6 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     command: --interval 300 --cleanup --rolling-restart --label-enable
-    restart: unless-stopped
+    restart: always
     environment:
       - WATCHTOWER_POLL_INTERVAL=300
