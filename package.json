@@ -4,7 +4,7 @@
   "description": "A service to fetch and embed the latest video from a YouTube channel with dynamic scaling.",
   "main": "src/server/index.js",
   "scripts": {
-    "start": "node src/server/index.js",
+    "start": "npm update && node src/server/index.js",
     "test": "echo \"There is no tests.\" && exit 0"
   },
   "dependencies": {
