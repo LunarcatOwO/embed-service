@@ -45,7 +45,7 @@ const getLatestVideo = async (channelId = CHANNEL_ID) => {
     }
   } catch (error) {
     console.error("Error fetching latest video:", error);
-    throw error;
+    return cache.latestVideo.data; // Return cached data on error
   }
 };
 
@@ -88,7 +88,7 @@ const getFeaturedVideo = async (channelId = CHANNEL_ID) => {
     }
   } catch (error) {
     console.error("Error fetching featured video:", error);
-    throw error;
+    return cache.featuredVideo.data; // Return cached data on error
   }
 };
 
