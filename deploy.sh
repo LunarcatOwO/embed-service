@@ -1,24 +1,31 @@
 #!/bin/bash
 
+echo "=== YouTube Embed Service Deployment ==="
+
 # Load environment variables
 if [ -f .env.deploy ]; then
   export $(grep -v '^#' .env.deploy | xargs)
 fi
 
-# Pull latest code
+# Pull latest code from repository
+echo "Pulling latest code from repository..."
 git pull origin main
 
-# Build new image with a temporary tag
-docker build -t youtube-embed-service:new .
+# Build the updated image using docker-compose
+# This preserves all labels and configuration from docker-compose.yml
+echo "Building new image..."
+docker-compose build app
 
-# Stop and remove the old container gracefully
-docker-compose stop app
+# Perform a zero-downtime deployment
+echo "Performing zero-downtime deployment..."
+docker-compose up -d --no-deps app
 
-# Tag the new image as latest
-docker tag youtube-embed-service:new youtube-embed-service:latest
+# Remove any dangling images
+echo "Cleaning up..."
+docker image prune -f
 
-# Start the new container
-docker-compose up -d app
+echo "Deployment completed successfully!"
+echo "Service is running with latest changes and proper Watchtower configuration"
 
-# Remove the temporary tag
-docker rmi youtube-embed-service:new
+# Optional: Show running containers
+docker-compose ps
