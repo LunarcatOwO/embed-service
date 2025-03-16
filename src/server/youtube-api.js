@@ -19,7 +19,6 @@ const isCacheExpired = (cacheEntry) => {
 const getLatestVideo = async (channelId = CHANNEL_ID) => {
     // Use cache if available and not expired
     if (!isCacheExpired(cache.latestVideo)) {
-        console.log('Using cached latest video');
         return cache.latestVideo.data;
     }
     
@@ -52,7 +51,6 @@ const getLatestVideo = async (channelId = CHANNEL_ID) => {
 const getFeaturedVideo = async (channelId = CHANNEL_ID) => {
     // Use cache if available and not expired
     if (!isCacheExpired(cache.featuredVideo)) {
-        console.log('Using cached featured video');
         return cache.featuredVideo.data;
     }
     
