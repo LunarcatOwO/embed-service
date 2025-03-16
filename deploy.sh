@@ -9,7 +9,7 @@ fi
 
 # Pull latest code from repository
 echo "Pulling latest code from repository..."
-git pull origin main
+git pull
 
 # Build the updated image using docker-compose
 # This preserves all labels and configuration from docker-compose.yml
@@ -26,6 +26,3 @@ sudo docker image prune -f
 
 echo "Deployment completed successfully!"
 echo "Service is running with latest changes and proper Watchtower configuration"
-
-# Optional: Show running containers
-sudo docker compose ps
