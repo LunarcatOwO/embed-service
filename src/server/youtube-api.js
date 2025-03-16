@@ -22,7 +22,7 @@ const getLatestVideo = async (channelId = CHANNEL_ID) => {
   if (!isCacheExpired(cache.latestVideo)) {
     return cache.latestVideo.data;
   }
-
+  console.log("Fetching latest video... due to cache expiration");
   const url = `https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${channelId}&order=date&part=snippet&type=video&maxResults=1`;
 
   try {
@@ -54,7 +54,7 @@ const getFeaturedVideo = async (channelId = CHANNEL_ID) => {
   if (!isCacheExpired(cache.featuredVideo)) {
     return cache.featuredVideo.data;
   }
-
+  console.log("Fetching featured video... due to cache expiration");
   // Get the channel's branding settings which contains the featured video
   const url = `https://www.googleapis.com/youtube/v3/channels?key=${API_KEY}&id=${channelId}&part=brandingSettings`;
 
