@@ -1,106 +1,96 @@
 Collecting workspace information# YouTube Embed Service
 
-A Node.js service that provides easy embedding of the latest and featured videos from a YouTube channel with dynamic sizing capabilities.
+A lightweight service to fetch and embed the latest or featured video from a YouTube channel with dynamic scaling.
 
 ## Features
 
-- Fetch the latest video from a specified YouTube channel
-- Fetch the featured video (channel trailer) from a specified YouTube channel
-- API endpoints that return video data in JSON format
-- Ready-to-use embed endpoints that return HTML with responsive iframes
-- Support for customizable embed dimensions
+- **Latest Video Embed**: Automatically fetches and embeds the most recent video from your YouTube channel
+- **Featured Video Embed**: Shows the video you've set as featured on your channel
+- **Responsive Design**: Supports custom dimensions and styling
+- **Easy Integration**: Simple embed code for any website or platform
+- **API Endpoints**: JSON responses for programmatic usage
+- **Docker Ready**: Containerized for easy deployment and scaling
 
-## Installation
+## API Endpoints
 
-1. Clone this repository:
-   ```bash
-   git clone <repository-url>
-   cd youtube-embed-service
-   ```
+### JSON Endpoints
 
+- **GET `/app/json/latest-video`**: Returns JSON with embed URL for latest video
+- **GET `/app/json/featured-video`**: Returns JSON with embed URL for featured video
+
+### HTML Embed Endpoints
+
+- **GET `/app/latest-video`**: Returns HTML iframe with the latest video
+  - Query params: `width`, `height`, `borderRadius`
+- **GET `/app/featured-video`**: Returns HTML iframe with the featured video
+  - Query params: `width`, `height`, `borderRadius`
+
+## Setup
+
+### Prerequisites
+
+- Node.js (v14+)
+- Docker and Docker Compose (for containerized deployment)
+- YouTube API Key
+- YouTube Channel ID
+
+### Environment Variables
+
+Create a `.env` file based on the provided .env.example:
+
+```
+PORT=3000
+API_KEY=your_youtube_api_key
+YOUTUBE_CHANNEL_ID=your_channel_id
+```
+
+### Local Installation
+
+1. Clone this repository
 2. Install dependencies:
-   ```bash
+   ```
    npm install
    ```
-
-3. Create a .env file based on the example:
-   ```bash
-   cp .env.example .env
+3. Start the service:
+   ```
+   npm start
    ```
 
-4. Edit the .env file with your YouTube API key and channel ID:
+### Docker Deployment
+
+1. Run the setup script:
    ```
-   API_KEY=your-youtube-api-key
-   YOUTUBE_CHANNEL_ID=your-channel-id
-   PORT=3000
+   ./run.sh
+   ```
+   This will prompt for required environment variables if not provided.
+
+2. For production deployment:
+   ```
+   ./deploy.sh
    ```
 
-## Usage
+## Usage Examples
 
-### Starting the Server
-
-```bash
-npm start
-```
-
-The server will start on the port specified in your .env file (defaults to 3000).
-
-### API Endpoints
-
-#### JSON Endpoints
-
-- **GET `/app/json/latest-video`**
-  Returns the embed URL for the most recent video uploaded to the channel:
-  ```json
-  { "embedUrl": "https://www.youtube.com/embed/VIDEO_ID" }
-  ```
-
-- **GET `/app/json/featured-video`**
-  Returns the embed URL for the channel's featured video (or falls back to latest):
-  ```json
-  { "embedUrl": "https://www.youtube.com/embed/VIDEO_ID" }
-  ```
-
-#### Embed Endpoints
-
-- **GET `/app/latest-video`**
-  Returns HTML with an embedded iframe for the latest video.
-  Query parameters:
-  - `width` (optional): Width of the iframe (default: 560)
-  - `height` (optional): Height of the iframe (default: 315)
-
-- **GET `/app/featured-video`**
-  Returns HTML with an embedded iframe for the featured video.
-  Query parameters:
-  - `width` (optional): Width of the iframe (default: 560)
-  - `height` (optional): Height of the iframe (default: 315)
-
-## Embedding Examples
-
-### Basic embed in HTML
+### Embedding in HTML
 
 ```html
-<iframe src="http://your-service-url/app/latest-video" width="560" height="315" frameborder="0" allowfullscreen></iframe>
+<!-- Default size -->
+<iframe src="https://your-domain.com/app/latest-video" width="560" height="315" frameborder="0" allowfullscreen></iframe>
+
+<!-- Custom size and border radius -->
+<iframe src="https://your-domain.com/app/latest-video?width=640&height=360&borderRadius=0" width="640" height="360" frameborder="0" allowfullscreen></iframe>
 ```
 
-### Embed with custom dimensions
+### Using the JSON API
 
-```html
-<iframe src="http://your-service-url/app/latest-video?width=640&height=360" width="640" height="360" frameborder="0" allowfullscreen></iframe>
+```javascript
+fetch('https://your-domain.com/app/json/latest-video')
+  .then(response => response.json())
+  .then(data => {
+    console.log('Embed URL:', data.embedUrl);
+  });
 ```
 
-### Using the responsive embed endpoint directly
+## License
 
-```html
-<div style="width: 100%; max-width: 800px;">
-  <iframe src="http://your-service-url/app/latest-video" style="width: 100%; height: 450px;" frameborder="0" allowfullscreen></iframe>
-</div>
-```
-
-## Getting a YouTube API Key
-
-1. Go to the [Google Developers Console](https://console.developers.google.com/)
-2. Create a new project
-3. Enable the YouTube Data API v3
-4. Create credentials for an API key
-5. Restrict the API key as needed for security
+MIT License
