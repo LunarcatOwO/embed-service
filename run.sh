@@ -45,8 +45,8 @@ read -p "Restart service with new configuration? (y/n): " restart
 
 if [ "$restart" = "y" ] || [ "$restart" = "Y" ]; then
   echo "Restarting services..."
-  docker-compose down
-  docker-compose up -d
+  docker compose down
+  docker compose up -d
   echo "Services restarted with new configuration."
 else
   echo "Services not restarted. To apply new configuration, run: docker-compose down && docker-compose up -d"
