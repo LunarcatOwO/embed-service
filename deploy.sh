@@ -14,15 +14,15 @@ git pull
 # Build the updated image using docker-compose
 # This preserves all labels and configuration from docker-compose.yml
 echo "Building new image..."
-sudo docker compose build app
+docker compose build app
 
 # Perform a zero-downtime deployment
 echo "Performing zero-downtime deployment..."
-sudo docker compose up -d --no-deps app
+docker compose up -d --no-deps app
 
 # Remove any dangling images
 echo "Cleaning up..."
-sudo docker image prune -f
+docker image prune -f
 
 echo "Deployment completed successfully!"
 echo "Service is running with latest changes and proper Watchtower configuration"
