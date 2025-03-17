@@ -49,8 +49,6 @@ const getLatestVideo = async (channelId = CHANNEL_ID) => {
     if (cache.latestVideo.data) {
       return cache.latestVideo.data;
     }
-    // If cache is null, use a fallback embed
-    return "https://www.youtube.com/embed/dQw4w9WgXcQ"; // Fallback to a default video
   }
 };
 
