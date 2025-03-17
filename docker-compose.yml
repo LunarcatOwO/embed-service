@@ -10,7 +10,7 @@ services:
     ports:
       - "${PORT:-3000}:${PORT:-3000}"
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:${PORT:-3000}/app/json/latest-video"]
+      test: ["CMD", "wget", "-qO-", "http://localhost:${PORT:-3000}/app/json/featured-video"]
       interval: 30s
       timeout: 5s
       retries: 3
