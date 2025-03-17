@@ -8,7 +8,7 @@ const cache = {
   featuredVideo: { data: null, timestamp: 0 },
 };
 
-const CACHE_EXPIRATION = 15 * 60000;
+const CACHE_EXPIRATION = 60 * 60000;
 
 // Check if cache needs refreshing
 const isCacheExpired = (cacheEntry) => {
