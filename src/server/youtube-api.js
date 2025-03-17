@@ -45,7 +45,12 @@ const getLatestVideo = async (channelId = CHANNEL_ID) => {
     }
   } catch (error) {
     console.error("Error fetching latest video:", error);
-    return cache.latestVideo.data; // Return cached data on error
+    // Only return cached data if it's not null
+    if (cache.latestVideo.data) {
+      return cache.latestVideo.data;
+    }
+    // If cache is null, use a fallback embed
+    return "https://www.youtube.com/embed/dQw4w9WgXcQ"; // Fallback to a default video
   }
 };
 
@@ -88,23 +93,44 @@ const getFeaturedVideo = async (channelId = CHANNEL_ID) => {
     }
   } catch (error) {
     console.error("Error fetching featured video:", error);
-    return cache.featuredVideo.data; // Return cached data on error
+    // Only return cached data if it's not null
+    if (cache.featuredVideo.data) {
+      return cache.featuredVideo.data;
+    }
+    // If cache is null, try to use latest video
+    return getLatestVideo(channelId);
   }
 };
 
-// Function to manually refresh cache
+// Function to manually refresh cache - actually populate the cache
 const refreshCache = async () => {
   try {
     console.log("Manually refreshing cache...");
-    // Reset cache timestamps to force refresh on next request
-    cache.latestVideo.timestamp = 0;
-    cache.featuredVideo.timestamp = 0;
+    // Instead of just resetting timestamps, actually fetch the data
+    try {
+      await getLatestVideo();
+      console.log("Latest video cache refreshed");
+    } catch (error) {
+      console.error("Failed to refresh latest video cache:", error);
+    }
+    
+    try {
+      await getFeaturedVideo();
+      console.log("Featured video cache refreshed");
+    } catch (error) {
+      console.error("Failed to refresh featured video cache:", error);
+    }
   } catch (error) {
-    console.error("Error refreshing cache:", error);
+    console.error("Error in refresh cache procedure:", error);
   }
 };
 
-// Refresh cache on module load
-refreshCache();
+// Set up a periodic refresh instead of just on module load
+// This ensures we don't hit the API on every restart
+const REFRESH_INTERVAL = 3 * 60 * 60000; // Refresh every 3 hours
+setTimeout(() => {
+  refreshCache(); // Initial refresh after a delay
+  setInterval(refreshCache, REFRESH_INTERVAL); // Then regular refreshes
+}, 10000); // Wait 10 seconds after startup before first refresh
 
 module.exports = { getLatestVideo, getFeaturedVideo, refreshCache };
