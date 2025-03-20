@@ -1,6 +1,6 @@
 services:
   app:
-    image: ghcr.io/lunarcatowo/youtube-embed-service:main
+    image: ghcr.io/lunarcatowo/embed-service:main
     restart: always
     environment:
       - NODE_ENV=production
