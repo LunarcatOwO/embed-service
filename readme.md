@@ -1,4 +1,4 @@
-Collecting workspace information# YouTube Embed Service
+Collecting workspace information# Embed Service
 
 A lightweight service to fetch and embed the latest or featured video from a YouTube channel with dynamic scaling.
 
