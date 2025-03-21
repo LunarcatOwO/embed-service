@@ -1,6 +1,13 @@
 const express = require("express");
 const { getLatestVideo, getFeaturedVideo } = require("./youtube-api");
 
+// Helper function to process parent domain
+function processParentDomain(parent) {
+  if (!parent) return '';
+  // Remove port if present and protocol if included
+  return parent.replace(/:[\d]+$/, '').replace(/^https?:\/\//, '');
+}
+
 function setupRoutes(app) {
   // API endpoint that returns JSON data for latest video
   app.get("/app/json/latest-video", async (req, res) => {
@@ -118,14 +125,21 @@ function setupRoutes(app) {
       // Get channel ID from query parameter
       const channelId = req.query.channel;
       // Get parent site from query parameter (required by Twitch)
-      const parentSite = req.query.parent || req.headers.host;
+      let parentDomain = req.query.parent || 
+                         (req.headers.origin ? new URL(req.headers.origin).hostname : 
+                         (req.headers.referer ? new URL(req.headers.referer).hostname : 
+                         req.headers.host));
+      
+      parentDomain = processParentDomain(parentDomain);
+      
+      // Make sure we have a valid parent
+      if (!parentDomain) {
+        return res.status(400).send("Unable to determine parent domain. Please provide 'parent' parameter with your domain name (without protocol or port).");
+      }
 
       // Validate that channel ID was provided
       if (!channelId) {
         return res.status(400).send("Channel ID is required as a query parameter");
-      }
-      if (!parentSite) {
-        return res.status(400).send("Parent site is required as a query parameter");
       }
 
       // Add CORS headers to ensure it can be embedded anywhere
@@ -149,7 +163,7 @@ function setupRoutes(app) {
 </head>
 <body>
     <div class="video-container">
-        <iframe width="${width}" height="${height}" src="https://player.twitch.tv/?channel=${channelId}&parent=${parentSite}" frameborder="0" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+        <iframe width="${width}" height="${height}" src="https://player.twitch.tv/?channel=${channelId}&parent=${parentDomain}" frameborder="0" allowfullscreen allow="autoplay; encrypted-media"></iframe>
     </div>
 </body>
 </html>`);
@@ -170,14 +184,21 @@ function setupRoutes(app) {
       // Get channel ID from query parameter
       const channelId = req.query.channel;
       // Get parent site from query parameter (required by Twitch)
-      const parentSite = req.query.parent || req.headers.host;
+      let parentDomain = req.query.parent || 
+                         (req.headers.origin ? new URL(req.headers.origin).hostname : 
+                         (req.headers.referer ? new URL(req.headers.referer).hostname : 
+                         req.headers.host));
+      
+      parentDomain = processParentDomain(parentDomain);
+      
+      // Make sure we have a valid parent
+      if (!parentDomain) {
+        return res.status(400).send("Unable to determine parent domain. Please provide 'parent' parameter with your domain name (without protocol or port).");
+      }
 
       // Validate that channel ID was provided
       if (!channelId) {
         return res.status(400).send("Channel ID is required as a query parameter");
-      }
-      if (!parentSite) {
-        return res.status(400).send("Parent site is required as a query parameter");
       }
 
       // Add CORS headers to ensure it can be embedded anywhere
@@ -201,7 +222,7 @@ function setupRoutes(app) {
 </head>
 <body>
     <div class="chat-container">
-        <iframe width="${width}" height="${height}" src="https://www.twitch.tv/embed/${channelId}/chat?parent=${parentSite}" frameborder="0"></iframe>
+        <iframe width="${width}" height="${height}" src="https://www.twitch.tv/embed/${channelId}/chat?parent=${parentDomain}" frameborder="0"></iframe>
     </div>
 </body>
 </html>`);
