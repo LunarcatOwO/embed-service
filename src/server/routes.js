@@ -199,7 +199,7 @@ function setupRoutes(app) {
 </head>
 <body>
     <div class="video-container">
-        <iframe width="${width}" height="${height}" src="https://player.twitch.tv/?channel=${channelId}&parent=${parentParam}" allowfullscreen="" scrolling="no" frameborder="0" allow="autoplay; fullscreen" title="Twitch" sandbox="allow-modals allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-storage-access-by-user-activation" encrypted-media"></iframe>
+        <iframe width="${width}" height="${height}" src="https://player.twitch.tv/?channel=${channelId}&parent=${parentParam}" <iframe width="${width}" height="${height}" src="https://player.twitch.tv/?channel=${channelId}&parent=${parentParam}" frameborder="0" allowfullscreen allow="autoplay; encrypted-media"></iframe>
       </div>
 </body>
 </html>`);
@@ -263,7 +263,7 @@ function setupRoutes(app) {
 </head>
 <body>
     <div class="chat-container">
-        <iframe width="${width}" height="${height}" src="https://www.twitch.tv/embed/${channelId}/chat?parent=${parentParam}" allowfullscreen="" scrolling="no" frameborder="0" allow="autoplay; fullscreen" title="Twitch" sandbox="allow-modals allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-storage-access-by-user-activation" encrypted-media"></iframe>
+        <iframe width="${width}" height="${height}" src="https://www.twitch.tv/embed/${channelId}/chat?parent=${parentParam}" frameborder="0"></iframe>
     </div>
 </body>
 </html>`);
