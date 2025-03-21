@@ -3,35 +3,40 @@ const { getLatestVideo, getFeaturedVideo } = require("./youtube-api");
 
 // Helper function to process parent domain
 function processParentDomain(parent) {
-  if (!parent) return '';
+  if (!parent) return "";
   // Remove port if present and protocol if included
-  return parent.replace(/:[\d]+$/, '').replace(/^https?:\/\//, '');
+  return parent.replace(/:[\d]+$/, "").replace(/^https?:\/\//, "");
 }
 
 // Get the default parent domain configuration
-const DEFAULT_PARENT_DOMAIN = process.env.DEFAULT_PARENT_DOMAIN || '';
+const DEFAULT_PARENT_DOMAIN = process.env.DEFAULT_PARENT_DOMAIN || "";
 
 // Helper function to get multiple parent domains for Twitch embedding
 function getParentDomains(req) {
   // Get domains from various sources
-  const providedDomains = req.query.parent ? req.query.parent.split(',') : [];
-  const originDomain = req.headers.origin ? new URL(req.headers.origin).hostname : '';
-  const refererDomain = req.headers.referer ? new URL(req.headers.referer).hostname : '';
-  const hostDomain = req.headers.host ? req.headers.host.split(':')[0] : '';
-  
+  const providedDomains = req.query.parent ? req.query.parent.split(",") : [];
+  const originDomain = req.headers.origin
+    ? new URL(req.headers.origin).hostname
+    : "";
+  const refererDomain = req.headers.referer
+    ? new URL(req.headers.referer).hostname
+    : "";
+  const hostDomain = req.headers.host ? req.headers.host.split(":")[0] : "";
+
   // Collect all detected domains
   const domains = [...providedDomains];
   if (originDomain) domains.push(originDomain);
-  if (refererDomain && !domains.includes(refererDomain)) domains.push(refererDomain);
+  if (refererDomain && !domains.includes(refererDomain))
+    domains.push(refererDomain);
   if (hostDomain && !domains.includes(hostDomain)) domains.push(hostDomain);
-  
+
   // Add the default domain if provided in environment
   if (DEFAULT_PARENT_DOMAIN && !domains.includes(DEFAULT_PARENT_DOMAIN)) {
     domains.push(DEFAULT_PARENT_DOMAIN);
   }
-  
+
   // Process each domain to ensure proper format
-  return domains.map(domain => processParentDomain(domain)).filter(d => d);
+  return domains.map((domain) => processParentDomain(domain)).filter((d) => d);
 }
 
 function setupRoutes(app) {
@@ -150,18 +155,24 @@ function setupRoutes(app) {
       const borderRadius = req.query.borderRadius || "12px";
       // Get channel ID from query parameter
       const channelId = req.query.channel;
-      
+
       // Get all possible parent domains
       const parentDomains = getParentDomains(req);
-      
+
       // Make sure we have at least one valid parent domain
       if (parentDomains.length === 0) {
-        return res.status(400).send("Unable to determine parent domain. Please provide 'parent' parameter with your domain name (without protocol or port).");
+        return res
+          .status(400)
+          .send(
+            "Unable to determine parent domain. Please provide 'parent' parameter with your domain name (without protocol or port)."
+          );
       }
 
       // Validate that channel ID was provided
       if (!channelId) {
-        return res.status(400).send("Channel ID is required as a query parameter");
+        return res
+          .status(400)
+          .send("Channel ID is required as a query parameter");
       }
 
       // Add CORS headers to ensure it can be embedded anywhere
@@ -171,7 +182,7 @@ function setupRoutes(app) {
       res.setHeader("Content-Type", "text/html");
 
       // Create the parent parameter string for the Twitch embed
-      const parentParam = parentDomains.join('&parent=');
+      const parentParam = parentDomains.join("&parent=");
 
       // Send clean HTML with minimal whitespace for Twitch stream
       res.send(`<!DOCTYPE html>
@@ -188,8 +199,8 @@ function setupRoutes(app) {
 </head>
 <body>
     <div class="video-container">
-        <iframe width="${width}" height="${height}" src="https://player.twitch.tv/?channel=${channelId}&parent=${parentParam}" frameborder="0" allowfullscreen allow="autoplay; encrypted-media"></iframe>
-    </div>
+        <iframe width="${width}" height="${height}" src="https://player.twitch.tv/?channel=${channelId}&parent=${parentParam}" allowfullscreen="" scrolling="no" frameborder="0" allow="autoplay; fullscreen" title="Twitch" sandbox="allow-modals allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-storage-access-by-user-activation" encrypted-media"></iframe>
+      </div>
 </body>
 </html>`);
     } catch (error) {
@@ -208,18 +219,24 @@ function setupRoutes(app) {
       const borderRadius = req.query.borderRadius || "12px";
       // Get channel ID from query parameter
       const channelId = req.query.channel;
-      
+
       // Get all possible parent domains
       const parentDomains = getParentDomains(req);
-      
+
       // Make sure we have at least one valid parent domain
       if (parentDomains.length === 0) {
-        return res.status(400).send("Unable to determine parent domain. Please provide 'parent' parameter with your domain name (without protocol or port).");
+        return res
+          .status(400)
+          .send(
+            "Unable to determine parent domain. Please provide 'parent' parameter with your domain name (without protocol or port)."
+          );
       }
 
       // Validate that channel ID was provided
       if (!channelId) {
-        return res.status(400).send("Channel ID is required as a query parameter");
+        return res
+          .status(400)
+          .send("Channel ID is required as a query parameter");
       }
 
       // Add CORS headers to ensure it can be embedded anywhere
@@ -229,7 +246,7 @@ function setupRoutes(app) {
       res.setHeader("Content-Type", "text/html");
 
       // Create the parent parameter string for the Twitch embed
-      const parentParam = parentDomains.join('&parent=');
+      const parentParam = parentDomains.join("&parent=");
 
       // Send clean HTML with minimal whitespace for Twitch chat
       res.send(`<!DOCTYPE html>
@@ -246,7 +263,7 @@ function setupRoutes(app) {
 </head>
 <body>
     <div class="chat-container">
-        <iframe width="${width}" height="${height}" src="https://www.twitch.tv/embed/${channelId}/chat?parent=${parentParam}" frameborder="0"></iframe>
+        <iframe width="${width}" height="${height}" src="https://www.twitch.tv/embed/${channelId}/chat?parent=${parentParam}" allowfullscreen="" scrolling="no" frameborder="0" allow="autoplay; fullscreen" title="Twitch" sandbox="allow-modals allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-storage-access-by-user-activation" encrypted-media"></iframe>
     </div>
 </body>
 </html>`);
