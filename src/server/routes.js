@@ -2,36 +2,6 @@ const express = require("express");
 const { getLatestVideo, getFeaturedVideo } = require("./youtube-api");
 
 function setupRoutes(app) {
-  // Helper function to extract domain from request
-  function extractDomain(req) {
-    try {
-      // Try to get domain from different headers
-      const host = req.headers.host;
-      const referer = req.headers.referer;
-      const origin = req.headers.origin;
-      
-      let domain = null;
-      
-      if (host) {
-        // Extract just the domain part without port
-        domain = host.split(':')[0];
-      } else if (referer) {
-        // Extract domain from referer URL
-        const url = new URL(referer);
-        domain = url.hostname;
-      } else if (origin) {
-        // Extract domain from origin URL
-        const url = new URL(origin);
-        domain = url.hostname;
-      }
-      
-      return domain;
-    } catch (error) {
-      console.warn("Failed to extract domain:", error);
-      return null;
-    }
-  }
-
   // API endpoint that returns JSON data for latest video
   app.get("/app/json/latest-video", async (req, res) => {
     try {
@@ -148,7 +118,7 @@ function setupRoutes(app) {
       // Get channel ID from query parameter
       const channelId = req.query.channel;
       // Get parent site from query parameter (required by Twitch)
-      const parentSite = req.query.parent || extractDomain(req);
+      const parentSite = req.query.parent || req.headers.host;
 
       // Validate that channel ID was provided
       if (!channelId) {
@@ -200,7 +170,7 @@ function setupRoutes(app) {
       // Get channel ID from query parameter
       const channelId = req.query.channel;
       // Get parent site from query parameter (required by Twitch)
-      const parentSite = req.query.parent || extractDomain(req);
+      const parentSite = req.query.parent || req.headers.host;
 
       // Validate that channel ID was provided
       if (!channelId) {
