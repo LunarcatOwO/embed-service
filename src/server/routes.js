@@ -8,6 +8,32 @@ function processParentDomain(parent) {
   return parent.replace(/:[\d]+$/, '').replace(/^https?:\/\//, '');
 }
 
+// Get the default parent domain configuration
+const DEFAULT_PARENT_DOMAIN = process.env.DEFAULT_PARENT_DOMAIN || '';
+
+// Helper function to get multiple parent domains for Twitch embedding
+function getParentDomains(req) {
+  // Get domains from various sources
+  const providedDomains = req.query.parent ? req.query.parent.split(',') : [];
+  const originDomain = req.headers.origin ? new URL(req.headers.origin).hostname : '';
+  const refererDomain = req.headers.referer ? new URL(req.headers.referer).hostname : '';
+  const hostDomain = req.headers.host ? req.headers.host.split(':')[0] : '';
+  
+  // Collect all detected domains
+  const domains = [...providedDomains];
+  if (originDomain) domains.push(originDomain);
+  if (refererDomain && !domains.includes(refererDomain)) domains.push(refererDomain);
+  if (hostDomain && !domains.includes(hostDomain)) domains.push(hostDomain);
+  
+  // Add the default domain if provided in environment
+  if (DEFAULT_PARENT_DOMAIN && !domains.includes(DEFAULT_PARENT_DOMAIN)) {
+    domains.push(DEFAULT_PARENT_DOMAIN);
+  }
+  
+  // Process each domain to ensure proper format
+  return domains.map(domain => processParentDomain(domain)).filter(d => d);
+}
+
 function setupRoutes(app) {
   // API endpoint that returns JSON data for latest video
   app.get("/app/json/latest-video", async (req, res) => {
@@ -124,16 +150,12 @@ function setupRoutes(app) {
       const borderRadius = req.query.borderRadius || "12px";
       // Get channel ID from query parameter
       const channelId = req.query.channel;
-      // Get parent site from query parameter (required by Twitch)
-      let parentDomain = req.query.parent || 
-                         (req.headers.origin ? new URL(req.headers.origin).hostname : 
-                         (req.headers.referer ? new URL(req.headers.referer).hostname : 
-                         req.headers.host));
       
-      parentDomain = processParentDomain(parentDomain);
+      // Get all possible parent domains
+      const parentDomains = getParentDomains(req);
       
-      // Make sure we have a valid parent
-      if (!parentDomain) {
+      // Make sure we have at least one valid parent domain
+      if (parentDomains.length === 0) {
         return res.status(400).send("Unable to determine parent domain. Please provide 'parent' parameter with your domain name (without protocol or port).");
       }
 
@@ -147,6 +169,9 @@ function setupRoutes(app) {
 
       // Set content type to HTML
       res.setHeader("Content-Type", "text/html");
+
+      // Create the parent parameter string for the Twitch embed
+      const parentParam = parentDomains.join('&parent=');
 
       // Send clean HTML with minimal whitespace
       res.send(`<!DOCTYPE html>
@@ -163,7 +188,7 @@ function setupRoutes(app) {
 </head>
 <body>
     <div class="video-container">
-        <iframe width="${width}" height="${height}" src="https://player.twitch.tv/?channel=${channelId}&parent=${parentDomain}" frameborder="0" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+        <iframe width="${width}" height="${height}" src="https://player.twitch.tv/?channel=${channelId}&parent=${parentParam}" frameborder="0" allowfullscreen allow="autoplay; encrypted-media"></iframe>
     </div>
 </body>
 </html>`);
@@ -183,16 +208,12 @@ function setupRoutes(app) {
       const borderRadius = req.query.borderRadius || "12px";
       // Get channel ID from query parameter
       const channelId = req.query.channel;
-      // Get parent site from query parameter (required by Twitch)
-      let parentDomain = req.query.parent || 
-                         (req.headers.origin ? new URL(req.headers.origin).hostname : 
-                         (req.headers.referer ? new URL(req.headers.referer).hostname : 
-                         req.headers.host));
       
-      parentDomain = processParentDomain(parentDomain);
+      // Get all possible parent domains
+      const parentDomains = getParentDomains(req);
       
-      // Make sure we have a valid parent
-      if (!parentDomain) {
+      // Make sure we have at least one valid parent domain
+      if (parentDomains.length === 0) {
         return res.status(400).send("Unable to determine parent domain. Please provide 'parent' parameter with your domain name (without protocol or port).");
       }
 
@@ -206,6 +227,9 @@ function setupRoutes(app) {
 
       // Set content type to HTML
       res.setHeader("Content-Type", "text/html");
+
+      // Create the parent parameter string for the Twitch embed
+      const parentParam = parentDomains.join('&parent=');
 
       // Send clean HTML with minimal whitespace
       res.send(`<!DOCTYPE html>
@@ -222,7 +246,7 @@ function setupRoutes(app) {
 </head>
 <body>
     <div class="chat-container">
-        <iframe width="${width}" height="${height}" src="https://www.twitch.tv/embed/${channelId}/chat?parent=${parentDomain}" frameborder="0"></iframe>
+        <iframe width="${width}" height="${height}" src="https://www.twitch.tv/embed/${channelId}/chat?parent=${parentParam}" frameborder="0"></iframe>
     </div>
 </body>
 </html>`);
