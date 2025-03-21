@@ -173,7 +173,7 @@ function setupRoutes(app) {
       // Create the parent parameter string for the Twitch embed
       const parentParam = parentDomains.join('&parent=');
 
-      // Send clean HTML with minimal whitespace
+      // Send clean HTML with minimal whitespace for Twitch stream
       res.send(`<!DOCTYPE html>
 <html>
 <head>
@@ -181,9 +181,9 @@ function setupRoutes(app) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Twitch Stream: ${channelId}</title>
     <style>
-        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; }
-        .video-container { width: 100%; height: 100%; overflow: hidden; border-radius: ${borderRadius}; }
-        iframe { width: 100%; height: 100%; border: 0; }
+        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: transparent; }
+        .video-container { width: 100%; height: 100%; overflow: hidden; border-radius: ${borderRadius}; background: transparent; border: none; line-height: 0; }
+        iframe { width: 100%; height: 100%; border: 0; display: block; margin: 0; padding: 0; background: transparent; }
     </style>
 </head>
 <body>
@@ -231,7 +231,7 @@ function setupRoutes(app) {
       // Create the parent parameter string for the Twitch embed
       const parentParam = parentDomains.join('&parent=');
 
-      // Send clean HTML with minimal whitespace
+      // Send clean HTML with minimal whitespace for Twitch chat
       res.send(`<!DOCTYPE html>
 <html>
 <head>
@@ -239,9 +239,9 @@ function setupRoutes(app) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Twitch Chat: ${channelId}</title>
     <style>
-        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; }
-        .chat-container { width: 100%; height: 100%; overflow: hidden; border-radius: ${borderRadius}; }
-        iframe { width: 100%; height: 100%; border: 0; }
+        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: transparent; }
+        .chat-container { width: 100%; height: 100%; overflow: hidden; border-radius: ${borderRadius}; background: transparent; border: none; line-height: 0; }
+        iframe { width: 100%; height: 100%; border: 0; display: block; margin: 0; padding: 0; background: transparent; }
     </style>
 </head>
 <body>
