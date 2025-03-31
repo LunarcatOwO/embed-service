@@ -272,6 +272,84 @@ function setupRoutes(app) {
       res.status(500).send("Failed to create Twitch chat embed");
     }
   });
+
+  // Countdown timer embed endpoint
+  app.get("/app/countdown", (req, res) => {
+    // Add CORS headers to ensure it can be embedded anywhere
+    res.header("Access-Control-Allow-Origin", "*");
+
+    // Set content type to HTML
+    res.setHeader("Content-Type", "text/html");
+
+    // Send HTML for the countdown timer
+    res.send(`<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown to Provincial Championships</title>
+    <style>
+        body, html { 
+            margin: 0; 
+            padding: 0; 
+            height: 100%; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            font-family: Arial, sans-serif; 
+            background: transparent; 
+        }
+        .countdown { 
+            text-align: center; 
+            background: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+            border: 2px solid #000; /* Black border */
+            border-radius: 12px; /* Rounded corners */
+            padding: 20px; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+        }
+        .countdown h1 { 
+            font-size: 2rem; 
+            margin-bottom: 1rem; 
+        }
+        .countdown p { 
+            font-size: 1.5rem; 
+        }
+    </style>
+</head>
+<body>
+    <div class="countdown">
+        <h1>Countdown to Provincial Championships</h1>
+        <p id="timer"></p>
+    </div>
+    <script>
+        // Set the target date and time
+        const targetDate = new Date("April 3, 2025 08:00:00").getTime();
+
+        // Update the countdown every second
+        const interval = setInterval(() => {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            // Calculate days, hours, minutes, and seconds
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Display the result
+            document.getElementById("timer").innerHTML = 
+                \`\${days}d \${hours}h \${minutes}m \${seconds}s\`;
+
+            // If the countdown is over, display a message
+            if (distance < 0) {
+                clearInterval(interval);
+                document.getElementById("timer").innerHTML = "The Provincial Championships have started!";
+            }
+        }, 1000);
+    </script>
+</body>
+</html>`);
+  });
 }
 
 module.exports = setupRoutes;
