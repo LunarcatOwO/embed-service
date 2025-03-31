@@ -312,7 +312,7 @@ function setupRoutes(app) {
             width: 100%; /* Responsive width */
             height: 100%; /* Responsive height */
             max-width: 600px; /* Limit maximum width */
-            max-height: 150px; /* Limit maximum height */
+            max-height: 100%; /* Allow height to scale with the frame */
         }
         .countdown div { 
             flex: 1; 
@@ -368,7 +368,7 @@ function setupRoutes(app) {
         }, 1000);
     </script>
 </body>
-</html>`);
+</html>`); 
   });
 }
 
