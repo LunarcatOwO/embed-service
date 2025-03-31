@@ -310,9 +310,9 @@ function setupRoutes(app) {
             padding: 10px; 
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
             width: 100%; /* Responsive width */
-            height: 100%; /* Responsive height */
             max-width: 600px; /* Limit maximum width */
-            max-height: 100%; /* Allow height to scale with the frame */
+            height: auto; /* Allow height to scale dynamically */
+            aspect-ratio: 4 / 1; /* Maintain a 4:1 aspect ratio */
         }
         .countdown div { 
             flex: 1; 
