@@ -301,18 +301,21 @@ function setupRoutes(app) {
         }
         .countdown { 
             text-align: center; 
-            background: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+            background: #ffffff; /* Solid white background */
             border: 2px solid #000; /* Black border */
             border-radius: 12px; /* Rounded corners */
             padding: 20px; 
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+            max-width: 300px; /* Limit width */
+            max-height: 200px; /* Limit height */
+            width: 100%; /* Responsive width */
         }
         .countdown h1 { 
-            font-size: 2rem; 
+            font-size: 1.5rem; /* Adjusted font size */
             margin-bottom: 1rem; 
         }
         .countdown p { 
-            font-size: 1.5rem; 
+            font-size: 1.2rem; /* Adjusted font size */
         }
     </style>
 </head>
@@ -333,7 +336,7 @@ function setupRoutes(app) {
             // Calculate days, hours, minutes, and seconds
             const days = Math.floor(distance / (1000 * 60 * 60 * 24));
             const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const minutes = Math.floor((distance % (1000 * 60)) / (1000 * 60));
             const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
             // Display the result
