@@ -287,7 +287,7 @@ function setupRoutes(app) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Countdown to Provincial Championships</title>
+    <title>Countdown</title>
     <style>
         body, html { 
             margin: 0; 
@@ -300,29 +300,38 @@ function setupRoutes(app) {
             background: transparent; 
         }
         .countdown { 
-            text-align: center; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
             background: #ffffff; /* Solid white background */
             border: 2px solid #000; /* Black border */
             border-radius: 12px; /* Rounded corners */
-            padding: 20px; 
+            padding: 10px; 
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
-            max-width: 300px; /* Limit width */
-            max-height: 200px; /* Limit height */
+            max-width: 400px; /* Limit width */
             width: 100%; /* Responsive width */
         }
-        .countdown h1 { 
-            font-size: 1.5rem; /* Adjusted font size */
-            margin-bottom: 1rem; 
+        .countdown div { 
+            flex: 1; 
+            text-align: center; 
+            padding: 10px; 
+            border-right: 1px solid #000; /* Divider line */
+        }
+        .countdown div:last-child { 
+            border-right: none; /* Remove the last divider */
         }
         .countdown p { 
-            font-size: 1.2rem; /* Adjusted font size */
+            font-size: 1.5rem; /* Adjusted font size */
+            margin: 0; 
         }
     </style>
 </head>
 <body>
     <div class="countdown">
-        <h1>Countdown to Provincial Championships</h1>
-        <p id="timer"></p>
+        <div><p id="days"></p></div>
+        <div><p id="hours"></p></div>
+        <div><p id="minutes"></p></div>
+        <div><p id="seconds"></p></div>
     </div>
     <script>
         // Set the target date and time
@@ -340,13 +349,18 @@ function setupRoutes(app) {
             const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
             // Display the result
-            document.getElementById("timer").innerHTML = 
-                \`\${days}d \${hours}h \${minutes}m \${seconds}s\`;
+            document.getElementById("days").textContent = days + "d";
+            document.getElementById("hours").textContent = hours + "h";
+            document.getElementById("minutes").textContent = minutes + "m";
+            document.getElementById("seconds").textContent = seconds + "s";
 
             // If the countdown is over, display a message
             if (distance < 0) {
                 clearInterval(interval);
-                document.getElementById("timer").innerHTML = "The Provincial Championships have started!";
+                document.getElementById("days").textContent = "";
+                document.getElementById("hours").textContent = "";
+                document.getElementById("minutes").textContent = "";
+                document.getElementById("seconds").textContent = "Started!";
             }
         }, 1000);
     </script>
