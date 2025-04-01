@@ -340,10 +340,10 @@ app.get("/app/countdown", (req, res) => {
             padding: 8px 4px; 
             margin: 0 5px;
             backdrop-filter: blur(5px);
-            background-color: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background-color: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -353,42 +353,43 @@ app.get("/app/countdown", (req, res) => {
             font-weight: 700;
             margin: 0;
             line-height: 1;
-            color: #333;
-            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
         }
         .countdown .label {
             font-size: 0.8rem;
             text-transform: uppercase;
             letter-spacing: 1px;
             margin-top: 4px;
-            color: #666;
+            color: rgba(255, 255, 255, 0.8);
         }
         .countdown.completed {
             justify-content: center;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(0, 0, 0, 0.2);
             backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
             animation: pulse 1.5s infinite ease-in-out;
         }
         
         .completion-message {
             text-align: center;
             padding: 20px;
+            width: 100%;
         }
         
         .completion-message span {
             font-size: 2.2rem;
             font-weight: 700;
-            color: #333;
-            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
         }
         
         @keyframes pulse {
-            0% { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); }
-            50% { box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2); }
-            100% { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); }
+            0% { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25); }
+            50% { box-shadow: 0 4px 24px rgba(255, 255, 255, 0.3); }
+            100% { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25); }
         }
         @media (max-width: 480px) {
             .countdown .value { font-size: 1.5rem; }
