@@ -273,21 +273,43 @@ function setupRoutes(app) {
     }
   });
 
-  // Countdown timer embed endpoint
-  app.get("/app/countdown", (req, res) => {
-    // Add CORS headers to ensure it can be embedded anywhere
-    res.header("Access-Control-Allow-Origin", "*");
+// Countdown timer embed endpoint
+app.get("/app/countdown", (req, res) => {
+  // Add CORS headers to ensure it can be embedded anywhere
+  res.header("Access-Control-Allow-Origin", "*");
 
-    // Set content type to HTML
-    res.setHeader("Content-Type", "text/html");
+  // Set content type to HTML
+  res.setHeader("Content-Type", "text/html");
 
-    // Send HTML for the countdown timer
-    res.send(`<!DOCTYPE html>
+  // Get target date from query parameters or use default
+  const defaultDate = "April 3, 2025 08:00:00";
+  
+  // Parse date from query parameters (full date string)
+  let targetDateString = req.query.targetDate || defaultDate;
+  
+  // Or build date from individual components if provided
+  if (req.query.year) {
+    const year = req.query.year || "2025";
+    const month = req.query.month || "4";  // 1-12
+    const day = req.query.day || "3";
+    const hour = req.query.hour || "8";
+    const minute = req.query.minute || "0";
+    const second = req.query.second || "0";
+    
+    // Create date string in format: "April 3, 2025 08:00:00"
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const monthName = months[parseInt(month) - 1];
+    targetDateString = `${monthName} ${day}, ${year} ${hour.padStart(2, '0')}:${minute.padStart(2, '0')}:${second.padStart(2, '0')}`;
+  }
+
+  // Send HTML for the countdown timer
+  res.send(`<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Countdown</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=HK+Modular:wght@400;700&display=swap">
     <style>
         body, html { 
             margin: 0; 
@@ -297,48 +319,106 @@ function setupRoutes(app) {
             display: flex; 
             justify-content: center; 
             align-items: center; 
-            font-family: Arial, sans-serif; 
+            font-family: 'HK Modular', sans-serif; 
             background: transparent; 
         }
         .countdown { 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            background: #ffffff; /* Solid white background */
-            border: 2px solid #000; /* Black border */
-            border-radius: 12px; /* Rounded corners */
+            background: transparent; 
+            border-radius: 12px; 
             padding: 10px; 
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
-            width: 100%; /* Responsive width */
-            max-width: 600px; /* Limit maximum width */
-            height: auto; /* Allow height to scale dynamically */
-            aspect-ratio: 4 / 1; /* Maintain a 4:1 aspect ratio */
+            width: 100%; 
+            max-width: 600px; 
+            height: auto; 
+            aspect-ratio: 4 / 1; 
         }
         .countdown div { 
             flex: 1; 
             text-align: center; 
-            padding: 10px; 
-            border-right: 1px solid #000; /* Divider line */
+            padding: 8px 4px; 
+            margin: 0 5px;
+            backdrop-filter: blur(5px);
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
-        .countdown div:last-child { 
-            border-right: none; /* Remove the last divider */
+        .countdown .value { 
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin: 0;
+            line-height: 1;
+            color: #333;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
         }
-        .countdown p { 
-            font-size: 1.5rem; /* Adjusted font size */
-            margin: 0; 
+        .countdown .label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 4px;
+            color: #666;
+        }
+        .countdown.completed {
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+        
+        .completion-message {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .completion-message span {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #333;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); }
+            50% { box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2); }
+            100% { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); }
+        }
+        @media (max-width: 480px) {
+            .countdown .value { font-size: 1.5rem; }
+            .countdown .label { font-size: 0.7rem; }
+            .countdown div { padding: 6px 2px; margin: 0 3px; }
         }
     </style>
 </head>
 <body>
     <div class="countdown">
-        <div><p id="days"></p></div>
-        <div><p id="hours"></p></div>
-        <div><p id="minutes"></p></div>
-        <div><p id="seconds"></p></div>
+        <div>
+            <p id="days" class="value"></p>
+            <p class="label">Days</p>
+        </div>
+        <div>
+            <p id="hours" class="value"></p>
+            <p class="label">Hours</p>
+        </div>
+        <div>
+            <p id="minutes" class="value"></p>
+            <p class="label">Minutes</p>
+        </div>
+        <div>
+            <p id="seconds" class="value"></p>
+            <p class="label">Seconds</p>
+        </div>
     </div>
     <script>
-        // Set the target date and time
-        const targetDate = new Date("April 3, 2025 08:00:00").getTime();
+        // Set the target date and time from the server-provided value
+        const targetDate = new Date("${targetDateString}").getTime();
 
         // Update the countdown every second
         const interval = setInterval(() => {
@@ -348,28 +428,42 @@ function setupRoutes(app) {
             // Calculate days, hours, minutes, and seconds
             const days = Math.floor(distance / (1000 * 60 * 60 * 24));
             const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60)) / (1000 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
             // Display the result
-            document.getElementById("days").textContent = days + "d";
-            document.getElementById("hours").textContent = hours + "h";
-            document.getElementById("minutes").textContent = minutes + "m";
-            document.getElementById("seconds").textContent = seconds + "s";
+            document.getElementById("days").textContent = days;
+            document.getElementById("hours").textContent = hours;
+            document.getElementById("minutes").textContent = minutes;
+            document.getElementById("seconds").textContent = seconds;
 
             // If the countdown is over, display a message
             if (distance < 0) {
                 clearInterval(interval);
-                document.getElementById("days").textContent = "";
-                document.getElementById("hours").textContent = "";
-                document.getElementById("minutes").textContent = "";
-                document.getElementById("seconds").textContent = "Started!";
+                
+                // Reference the countdown container
+                const countdownContainer = document.querySelector('.countdown');
+                
+                // Clear all existing content
+                countdownContainer.innerHTML = '';
+                
+                // Create a centered completion message
+                const completionMessage = document.createElement('div');
+                completionMessage.className = 'completion-message';
+                completionMessage.innerHTML = '<span>Event Started!</span>';
+                
+                // Add the message to the container
+                countdownContainer.appendChild(completionMessage);
+                
+                // Add completion styles
+                countdownContainer.classList.add('completed');
             }
         }, 1000);
     </script>
 </body>
 </html>`); 
-  });
-}
+});
+
+}  // End of setupRoutes function
 
 module.exports = setupRoutes;
