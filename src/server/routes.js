@@ -402,19 +402,19 @@ app.get("/app/countdown", (req, res) => {
     <div class="countdown">
         <div>
             <p id="days" class="value"></p>
-            <p class="label">Days</p>
+            <p class="label">Day(s)</p>
         </div>
         <div>
             <p id="hours" class="value"></p>
-            <p class="label">Hours</p>
+            <p class="label">Hour(s)</p>
         </div>
         <div>
             <p id="minutes" class="value"></p>
-            <p class="label">Minutes</p>
+            <p class="label">Minute(s)</p>
         </div>
         <div>
             <p id="seconds" class="value"></p>
-            <p class="label">Seconds</p>
+            <p class="label">Second(s)</p>
         </div>
     </div>
     <script>
